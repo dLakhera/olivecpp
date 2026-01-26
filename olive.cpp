@@ -91,10 +91,18 @@ void olivec_fill_line(uint32_t* pixels, size_t pixels_w, size_t pixels_h,
 		if (x1 >x2) 
 			SWAP(x1, x2);
 
-		for(int x = x1; x<x2; x++) {
-			int y = slope*x + intercept;
-			if(x>=0 and x<pixels_w and y >=0 and y<pixels_h) {
-				pixels[y*pixels_w + x] = color;
+		for(int x = x1; x<=x2; x++) {
+			if(x>=0 and x<pixels_w ){
+				int sy1 = slope*x + intercept;
+				int sy2 = slope*(x+1) + intercept;
+				
+				if(sy1 > sy2) SWAP(sy1, sy2);
+
+				for(int y = sy1;y<=sy2;y++){
+					if(y >=0 and y<pixels_h) {
+						pixels[y*pixels_w + x] = color;
+					}
+				}
 			}
 		}
 

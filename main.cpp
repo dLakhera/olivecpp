@@ -41,10 +41,6 @@ int checkboard_sample(){
 	return 1;
 }
 
-float lerpf(float a, float b, float c){
-	return a+(b-a)*c;
-}
-
 int circle_sample(){
 	char* file_path = "samples/circle.ppm";
 
@@ -57,7 +53,7 @@ int circle_sample(){
 	
 	uint32_t color = 0xFFFFFFFF;
 
-	char* file_path = "samples/checker_circle.ppm";
+	file_path = "samples/checker_circle.ppm";
 	for(int y =0;y<ROWS;y++) {
 		for(int x=0;x<COLS;x++) {
 			float u = (float)x/COLS;
@@ -85,13 +81,14 @@ int line_sample(){
 	char* file_path = "samples/lines.ppm";
 
 	olivec_fill(pixels, WIDTH, HEIGTH,0xFF000000);
-	olivec_fill_line(pixels, WIDTH, HEIGTH, 100, 100, 700, 850, 0xFFFFFFFF);
+	olivec_fill_line(pixels, WIDTH, HEIGTH, 0, 0, WIDTH/4, HEIGTH, 0xFFFFFFFF);
+	
 	if (olivec_save_to_ppm_file_path(pixels, WIDTH, HEIGTH, file_path) == -1){
 		std::cerr << "Failed to input data to file path given!" << std::endl;
 	}
 
 	
-	char* file_path = "samples/checker_lines.ppm";
+	file_path = "samples/checker_lines.ppm";
 	
 	olivec_fill(pixels, WIDTH, HEIGTH, 0xFFFFFFFF);
 
@@ -115,9 +112,9 @@ int main(){
 
 	std::cout << CELL_W << " " << CELL_H << std::endl;
 
-	checkboard_sample();
-	circle_sample();
-	line_sample();
+	// checkboard_sample();
+	// circle_sample();
+	std::cout<< line_sample() << std::endl;
 
 	std::cout << "Deepak Lakhera|!" << std::endl;
 	return 0;
