@@ -3,6 +3,16 @@
 
 #define return_defer(value) do {result = value; goto defer;} while(0)
 
+#define SWAP(a, b) do { \
+    auto _tmp = (a);   \
+    (a) = (b);         \
+    (b) = _tmp;        \
+} while (0)
+
+float lerpf(float a, float b, float c){
+	return a+(b-a)*c;
+}
+
 void olivec_fill(uint32_t *pixels, size_t width, size_t height, uint32_t color)
 {
 
@@ -65,6 +75,49 @@ void olivec_fill_circle(uint32_t* pixels, size_t pixels_w, size_t pixels_h, int 
 		}
 	}
 }
+
+
+void olivec_fill_line(uint32_t* pixels, size_t pixels_w, size_t pixels_h, 
+		int x1, int y1, int x2, int y2, 
+		uint32_t color)
+{
+
+	float slope, intercept;
+
+	if (x1-x2 != 0) {
+		slope = (float)(y2-y1)/(float)(x2-x1);
+		intercept = (-1.0f)*slope*x1 + y1;
+		
+		if (x1 >x2) 
+			SWAP(x1, x2);
+
+		for(int x = x1; x<x2; x++) {
+			int y = slope*x + intercept;
+			if(x>=0 and x<pixels_w and y >=0 and y<pixels_h) {
+				pixels[y*pixels_w + x] = color;
+			}
+		}
+
+	}
+	else {
+		if (x1 >=0 and x1<pixels_w){
+
+			if (y1 >y2) 
+				SWAP(y1, y2);
+
+
+			for(int y = y1;y<y2;y++) {
+				if ( y>=0 and y< pixels_h){
+					pixels[y*pixels_w + x1] = color;
+				}
+			}
+		}
+		return ;
+
+	}
+
+}
+
 void olivec_fill_rect(
 		uint32_t *pixels, size_t pixels_w, size_t pixels_h, 
 		int x0, int y0, size_t w, size_t h,

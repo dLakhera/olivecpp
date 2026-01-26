@@ -46,14 +46,14 @@ float lerpf(float a, float b, float c){
 }
 
 int circle_sample(){
-	// char* file_path = "samples/circle.ppm";
-	//
-	// olivec_fill(pixels, WIDTH, HEIGTH, BACKGROUND_COLOR);		
-	// olivec_fill_circle(pixels, WIDTH, HEIGTH, WIDTH/2, HEIGTH/2, 100, 0xFF00FF00);
-	// if (olivec_save_to_ppm_file_path(pixels, WIDTH, HEIGTH, file_path) == -1){
-	// 	std::cerr << "Failed to input data to file path given!" << std::endl;
-	// } 
-	// olivec_fill(pixels, WIDTH, HEIGTH, BACKGROUND_COLOR);
+	char* file_path = "samples/circle.ppm";
+
+	olivec_fill(pixels, WIDTH, HEIGTH, BACKGROUND_COLOR);		
+	olivec_fill_circle(pixels, WIDTH, HEIGTH, WIDTH/2, HEIGTH/2, 100, 0xFF00FF00);
+	if (olivec_save_to_ppm_file_path(pixels, WIDTH, HEIGTH, file_path) == -1){
+		std::cerr << "Failed to input data to file path given!" << std::endl;
+	} 
+	olivec_fill(pixels, WIDTH, HEIGTH, BACKGROUND_COLOR);
 	
 	uint32_t color = 0xFFFFFFFF;
 
@@ -78,8 +78,38 @@ int circle_sample(){
 
 	return 1;
 
-
 }
+
+int line_sample(){
+
+	char* file_path = "samples/lines.ppm";
+
+	olivec_fill(pixels, WIDTH, HEIGTH,0xFF000000);
+	olivec_fill_line(pixels, WIDTH, HEIGTH, 100, 100, 700, 850, 0xFFFFFFFF);
+	if (olivec_save_to_ppm_file_path(pixels, WIDTH, HEIGTH, file_path) == -1){
+		std::cerr << "Failed to input data to file path given!" << std::endl;
+	}
+
+	
+	char* file_path = "samples/checker_lines.ppm";
+	
+	olivec_fill(pixels, WIDTH, HEIGTH, 0xFFFFFFFF);
+
+	for(int y =0;y<ROWS;y++) {
+		for(int x=0;x<COLS;x++) {
+			olivec_fill_line(pixels, WIDTH, HEIGTH, x*CELL_W, y*CELL_H, (x+1)*CELL_W, y*CELL_H, 0xFF000000);
+			olivec_fill_line(pixels, WIDTH, HEIGTH, x*CELL_W, y*CELL_H, x*CELL_W, (y+1)*CELL_H, 0xFF000000);
+		}
+	}
+
+	if (olivec_save_to_ppm_file_path(pixels, WIDTH, HEIGTH, file_path) == -1){
+		std::cerr << "Failed to input data to file path given!" << std::endl;
+		return -1;
+	}
+
+	return 1;
+}
+
 
 int main(){
 
@@ -87,6 +117,7 @@ int main(){
 
 	checkboard_sample();
 	circle_sample();
+	line_sample();
 
 	std::cout << "Deepak Lakhera|!" << std::endl;
 	return 0;
