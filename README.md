@@ -1,6 +1,6 @@
 # Olive.cpp
 
-Simple 2d Graphics library for cpp
+Simple 2d Graphics Library for C++
 
 ## Quick Start
 
@@ -9,11 +9,10 @@ Simple 2d Graphics library for cpp
 $ bash bash.sh
 $ ./runnable
 ```
-```
 
 ## Gallery 
 
-### Simple figues!
+### Simple figures!
 ![Lines](./samples/lines.png)
 
 ![Rectangle](./samples/checker_sample.png)
