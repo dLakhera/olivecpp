@@ -13,6 +13,103 @@ float lerpf(float a, float b, float c){
 	return a+(b-a)*c;
 }
 
+void sort_triangle_points_by_y(
+	int *x1, int *y1,
+	int *x2, int *y2,
+	int *x3, int *y3 
+)
+{
+
+	if(*y1 > *y2) {
+		SWAP(*y1,*y2);
+		SWAP(*x1, *x2);
+	}
+	if(*y2 > *y3) {
+		SWAP(*y3,*y2);
+		SWAP(*x3, *x2);
+	}
+	if(*y1 > *y2) {
+		SWAP(*y1,*y2);
+		SWAP(*x1, *x2);
+	}
+
+}
+
+struct Vector2D{
+	int x,y;
+
+	Vector2D(int x, int y) : x(x), y(y) {}
+	
+	float cross(const Vector2D *v) const {
+		// return std::sqrt(this->dot(this)*v->dot(v) - this->dot(v)*this->dot(v));
+		return x*v->y - y*v->x;
+	}
+};
+
+void olivec_fill_triangle_vector(
+	uint32_t *pixels, size_t pixels_w, size_t pixels_h, 
+	int x1, int y1,
+	int x2, int y2,
+	int x3, int y3,
+	uint32_t color)
+{
+
+	int minb_x = std::min(x1, std::min(x2,x3));
+	int minb_y = std::min(y1, std::min(y2,y3));
+	int maxb_x = std::max(x1, std::max(x2,x3));
+	int maxb_y = std::max(y1, std::max(y2,y3));
+
+	if (( x1 == x2 and x2 == x3) or (y1 == y2 and y2==y3))
+	{
+		return;
+	}
+
+	Vector2D ba = Vector2D(x2-x1, y2-y1);
+	Vector2D bc = Vector2D(x2-x3, y2-y3);
+	Vector2D ca = Vector2D(x3-x1, y3-y1);
+	
+	float area = ba.cross(&ca);
+
+	for ( int x = minb_x; x < maxb_x; x++) {
+		if(x>=0 and x < (int)pixels_w)
+		{
+			for( int y = minb_y; y < maxb_y; y++) {
+				if(y >=0 and y < (int) pixels_h) {
+
+					Vector2D pc = Vector2D(x-x3, y-y3);
+					
+					float a = pc.cross(&bc)/area;
+					float b = pc.cross(&ca)/area;
+					float c = 1 - a - b;
+
+					if(a >=0.0f and b>=0.0f and c>=0.0f) {
+						pixels[y*pixels_w + x] = color;
+					}
+
+				}
+			}
+		}
+	}
+}
+
+
+bool olivec_line_segment_params(
+	int x1, int y1,
+	int x2, int y2,
+	float *m, float *c
+)
+{
+	int dx = x2-x1;
+	int dy = y2-y1;
+
+	if(dx == 0) return false;
+
+	*m = dy/dx;
+	*c = y1 - (*m)*x1;
+
+	return true;
+}
+
 void olivec_fill(uint32_t *pixels, size_t width, size_t height, uint32_t color)
 {
 
@@ -20,7 +117,6 @@ void olivec_fill(uint32_t *pixels, size_t width, size_t height, uint32_t color)
 		pixels[i] = color;
 	}
 }
-
 
 void olivec_fill_circle(uint32_t* pixels, size_t pixels_w, size_t pixels_h, int x0, int y0, size_t radius, uint32_t color)
 {
