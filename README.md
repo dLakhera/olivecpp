@@ -18,6 +18,10 @@ $ ./runnable
 
 ![Lines](./samples/lines.png)
 
+#### Checkerboard of lines
+
+![Checkerboard of lines](./samples/checker_lines.png)
+
 #### Rectangle
 
 ![Rectangle](./samples/checker_sample.png)
@@ -25,10 +29,6 @@ $ ./runnable
 #### Circle
 
 ![Circle](./samples/circle.png)
-
-#### Checkerboard of lines
-
-![Checkerboard of lines](./samples/checker_lines.png)
 
 #### Checkerboard of circles
 
