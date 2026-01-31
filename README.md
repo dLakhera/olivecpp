@@ -18,8 +18,6 @@ python3 -m http.server 8000
 
 You can now view the output on localhost:8000
 
-```
-```
 
 ## Gallery 
 
