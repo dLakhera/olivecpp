@@ -1,2 +1,4 @@
 samples/**.ppm
 runnable
+*.o
+*.wasm

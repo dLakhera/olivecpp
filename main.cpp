@@ -9,7 +9,6 @@ int main(){
 	line_sample();
 	triangles_sample();
 
-
 	std::cout << "Deepak Lakhera|!" << std::endl;
 	return 0;
 }

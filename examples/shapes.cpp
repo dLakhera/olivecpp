@@ -1,9 +1,3 @@
-
-#include <fstream>
-#include <cstdint>
-#include <cstring>
-#include <cmath>
-
 #include "../olive.cpp"
 
 
@@ -23,7 +17,7 @@ static uint32_t pixels[WIDTH * HEIGTH];
 
 int checkboard_sample(){
 
-	char* file_path = "samples/checker_sample.ppm";
+	const char* file_path = "samples/checker_sample.ppm";
 	for(int y =0;y<ROWS;y++) {
 		for(int x=0;x<COLS;x++) {
 			uint32_t color = BACKGROUND_COLOR;
@@ -43,7 +37,7 @@ int checkboard_sample(){
 }
 
 int circle_sample(){
-	char* file_path = "samples/circle.ppm";
+	const char* file_path = "samples/circle.ppm";
 
 	olivec_fill(pixels, WIDTH, HEIGTH, BACKGROUND_COLOR);		
 	olivec_fill_circle(pixels, WIDTH, HEIGTH, WIDTH/2, HEIGTH/2, 100,FOREGROUND_COLOR);
@@ -79,7 +73,7 @@ int circle_sample(){
 
 int line_sample(){
 
-	char* file_path = "samples/lines.ppm";
+	const char* file_path = "samples/lines.ppm";
 
 	olivec_fill(pixels, WIDTH, HEIGTH,BACKGROUND_COLOR);
 	olivec_fill_line(pixels, WIDTH, HEIGTH, 0,			0,			WIDTH/4,	HEIGTH,		FOREGROUND_COLOR);
@@ -119,7 +113,7 @@ int line_sample(){
 
 int triangles_sample()
 {
-	char* file_path = "samples/triangle.ppm";
+	const char* file_path = "samples/triangle.ppm";
 	olivec_fill(pixels, WIDTH, HEIGTH, BACKGROUND_COLOR);
 
 	int x1,x2,x3,y1,y2,y3;
@@ -132,8 +126,29 @@ int triangles_sample()
 		x1, y1,
 		x2, y2,
 		x3, y3,
-		0xFFFFFFFF	
+		0xff2ee90e	
 	);
+
+	x1 = 400, x2 = 700, x3 = 50;
+	y1 = 40, y2 = 250, y3 = 550;
+	olivec_fill_triangle_vector(
+		pixels, WIDTH, HEIGTH, 
+		x1, y1,
+		x2, y2,
+		x3, y3,
+		0xffe98a4a	
+	);
+
+	x1 = 110, x2 = 500, x3 = 780;
+	y1 = 50, y2 = 50, y3 = 240;
+	olivec_fill_triangle_vector(
+		pixels, WIDTH, HEIGTH, 
+		x1, y1,
+		x2, y2,
+		x3, y3,
+		0xff1783b1	
+	);
+
 
 	if (olivec_save_to_ppm_file_path(pixels, WIDTH, HEIGTH, file_path) == -1){
 		std::cerr << "Failed to input data to file path given!" << std::endl;

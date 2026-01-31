@@ -1,7 +1,16 @@
 #ifndef OLIVE_C_
 #define OLIVE_C_
 
+// #include <cstdint>
+// #include <cstring>
+// #include <cmath>
+#include <stdint.h>
+#include <stddef.h>
+
 #define return_defer(value) do {result = value; goto defer;} while(0)
+
+#define MIN(a,b) ((a)<(b) ? (a) : (b))
+#define MAX(a,b) ((a)>(b) ? (a) : (b))
 
 #define SWAP(a, b) do { \
     auto _tmp = (a);   \
@@ -54,10 +63,10 @@ void olivec_fill_triangle_vector(
 	uint32_t color)
 {
 
-	int minb_x = std::min(x1, std::min(x2,x3));
-	int minb_y = std::min(y1, std::min(y2,y3));
-	int maxb_x = std::max(x1, std::max(x2,x3));
-	int maxb_y = std::max(y1, std::max(y2,y3));
+	int minb_x = MIN(x1, MIN(x2,x3));
+	int minb_y = MIN(y1, MIN(y2,y3));
+	int maxb_x = MAX(x1, MAX(x2,x3));
+	int maxb_y = MAX(y1, MAX(y2,y3));
 
 	if (( x1 == x2 and x2 == x3) or (y1 == y2 and y2==y3))
 	{
@@ -188,14 +197,14 @@ void olivec_fill_line(uint32_t* pixels, size_t pixels_w, size_t pixels_h,
 			SWAP(x1, x2);
 
 		for(int x = x1; x<=x2; x++) {
-			if(x>=0 and x<pixels_w ){
+			if(x>=0 and x<=(int)pixels_w ){
 				int sy1 = slope*x + intercept;
 				int sy2 = slope*(x+1) + intercept;
 				
 				if(sy1 > sy2) SWAP(sy1, sy2);
 
 				for(int y = sy1;y<=sy2;y++){
-					if(y >=0 and y<pixels_h) {
+					if(y >=0 and y<(int)pixels_h) {
 						pixels[y*pixels_w + x] = color;
 					}
 				}
@@ -204,14 +213,14 @@ void olivec_fill_line(uint32_t* pixels, size_t pixels_w, size_t pixels_h,
 
 	}
 	else {
-		if (x1 >=0 and x1<pixels_w){
+		if (x1 >=0 and x1<(int)pixels_w){
 
 			if (y1 >y2) 
 				SWAP(y1, y2);
 
 
 			for(int y = y1;y<y2;y++) {
-				if ( y>=0 and y< pixels_h){
+				if ( y>=0 and y< (int)pixels_h){
 					pixels[y*pixels_w + x1] = color;
 				}
 			}
@@ -228,12 +237,12 @@ void olivec_fill_rect(
 		uint32_t color)
 {
 
-	for(int dy= 0; dy < h; dy++) {
+	for(int dy= 0; dy < (int)h; dy++) {
 		int y = dy+y0;
-		if (y <= pixels_h and y >=0 ) {
-			for(int dx = 0;dx < w;dx++) {
+		if (y <=(int)pixels_h and y >=0 ) {
+			for(int dx = 0;dx < (int)w;dx++) {
 				int x = x0 + dx;
-				if(x>=0 and x<=pixels_w) {
+				if(x>=0 and x<=(int)pixels_w) {
 					pixels[y*pixels_w + x] = color;
 				}
 			}
@@ -242,81 +251,87 @@ void olivec_fill_rect(
 
 }
 
-int olivec_investigate_ppm_file(const char* file_name) {
+#ifndef __wasm__
 
-	std::ifstream inFile;
-	uint8_t result = 0;
-	
-	{
-		inFile.open(file_name, std::ios::in | std::ios::binary);
+#include <fstream>
+#include <iostream>
+
+	int olivec_investigate_ppm_file(const char* file_name) {
+
+		std::ifstream inFile;
+		uint8_t result = 0;
 		
-		if(!inFile.is_open()){
-			return_defer(-1);
+		{
+			inFile.open(file_name, std::ios::in | std::ios::binary);
+			
+			if(!inFile.is_open()){
+				return_defer(-1);
+			}
+
+			std::string line;
+			while(std::getline(inFile, line)) {
+				std::cout << line << "\n" ;
+			}
+			result = 1;
+			inFile.close();
+			return result;
+
 		}
 
-		std::string line;
-		while(std::getline(inFile, line)) {
-			std::cout << line << "\n" ;
+	defer:
+
+		if (inFile) {
+			inFile.close();
 		}
-		result = 1;
-		inFile.close();
+
 		return result;
 
 	}
 
-defer:
-
-	if (inFile) {
-		inFile.close();
-	}
-
-	return result;
-
-}
-
-int olivec_save_to_ppm_file_path(uint32_t *pixels, size_t width, size_t height, const char* file_path ){
-	
-	int result = 0;
-	std::ofstream outFile;
-
-	{
-		outFile.open(file_path, std::ios::out|std::ios::binary);
-
-		if (!outFile.is_open())
-			return_defer(-1);
+	int olivec_save_to_ppm_file_path(uint32_t *pixels, size_t width, size_t height, const char* file_path ){
 		
-		std::string str = "P6\n" + std::to_string(width) + " " + std::to_string(height) + " 255\n";	
-		outFile.write(str.c_str(), str.size());
+		int result = 0;
+		std::ofstream outFile;
 
-		if(outFile.bad()) return_defer(-1);
+		{
+			outFile.open(file_path, std::ios::out|std::ios::binary);
 
-		for(size_t i=0;i < width * height; i++) {
-			// if (i%width == 0) outFile << "\n";
-			uint8_t bytes[3] = {
-				(pixels[i]>>(8*0)) & 0xFF,
-				(pixels[i]>>(8*1)) & 0xFF,
-				(pixels[i]>>(8*2)) & 0xFF,
-			};
-			
-			// std::cout << "Attempting to write bytes to file! \n" << std::endl;
-
-			outFile.write(reinterpret_cast<const char*>(bytes), sizeof(bytes));
-			if (outFile.bad()) 
+			if (!outFile.is_open())
 				return_defer(-1);
 			
+			std::string str = "P6\n" + std::to_string(width) + " " + std::to_string(height) + " 255\n";	
+			outFile.write(str.c_str(), str.size());
+
+			if(outFile.bad()) return_defer(-1);
+
+			for(size_t i=0;i < width * height; i++) {
+				// if (i%width == 0) outFile << "\n";
+				uint8_t bytes[3] = {
+					static_cast<uint8_t>((pixels[i]>>(8*0)) & 0xFF),
+					static_cast<uint8_t>((pixels[i]>>(8*1)) & 0xFF),
+					static_cast<uint8_t>((pixels[i]>>(8*2)) & 0xFF),
+				};
+				
+				// std::cout << "Attempting to write bytes to file! \n" << std::endl;
+
+				outFile.write(reinterpret_cast<const char*>(bytes), sizeof(bytes));
+				if (outFile.bad()) 
+					return_defer(-1);
+				
+			}
 		}
+		
+		outFile.close();
+
+		return 1;
+
+	defer:
+
+		if (outFile) outFile.close();
+		return result;
+
 	}
-	
-	outFile.close();
 
-	return 1;
-
-defer:
-
-	if (outFile) outFile.close();
-	return result;
-
-}
-
+#endif
 #endif
 
