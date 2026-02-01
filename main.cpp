@@ -4,6 +4,7 @@
 int main(){
 
 
+	rectangle_sample();
 	checkboard_sample();
 	circle_sample();
 	line_sample();

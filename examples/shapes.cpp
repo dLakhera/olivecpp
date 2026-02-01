@@ -36,6 +36,24 @@ int checkboard_sample(){
 	return 1;
 }
 
+int rectangle_sample()
+{
+	const char* file_path = "samples/rectangle.ppm";
+	olivec_fill(pixels, WIDTH, HEIGTH,FOREGROUND_COLOR);
+	olivec_fill_rect(pixels, WIDTH, HEIGTH, 0, 0, WIDTH*3/4, HEIGTH*3/4, 0xAAFF0000);
+	olivec_fill_rect(pixels, WIDTH, HEIGTH, WIDTH-1 , HEIGTH -1 , -WIDTH*3/4, -HEIGTH*3/4, 0xAA00FF00);
+	// olivec_fill_rect(pixels, WIDTH, HEIGTH, 0, HEIGTH -1 , WIDTH*3/4, -HEIGTH*3/4, 0xAA22eeDD);
+
+	if (olivec_save_to_ppm_file_path(pixels, WIDTH, HEIGTH, file_path) == -1){
+		std::cerr << "Failed to input data to file path given!" << std::endl;
+		return -1;
+	} 
+
+	return 1;
+
+}
+
+
 int circle_sample(){
 	const char* file_path = "samples/circle.ppm";
 
@@ -46,7 +64,7 @@ int circle_sample(){
 	} 
 	olivec_fill(pixels, WIDTH, HEIGTH, BACKGROUND_COLOR);
 	
-	uint32_t color = 0xFFFFFFFF;
+	uint32_t color = 0xAAFFFFFF;
 
 	file_path = "samples/checker_circle.ppm";
 	for(int y =0;y<ROWS;y++) {
@@ -81,11 +99,11 @@ int line_sample(){
 	olivec_fill_line(pixels, WIDTH, HEIGTH, 3*WIDTH/4,	0,			WIDTH,		HEIGTH,		FOREGROUND_COLOR);
 	olivec_fill_line(pixels, WIDTH, HEIGTH, WIDTH/4,	HEIGTH,		0,			0,			FOREGROUND_COLOR);
 	olivec_fill_line(pixels, WIDTH, HEIGTH, 3*WIDTH/4,	HEIGTH,		WIDTH,		0,			FOREGROUND_COLOR);
-	olivec_fill_line(pixels, WIDTH, HEIGTH, WIDTH/2,	HEIGTH,		WIDTH/2,	0,			0xFF20CC20);
-	olivec_fill_line(pixels, WIDTH, HEIGTH, WIDTH,		HEIGTH/2,	0,			HEIGTH/2,	0xFFCC0220);
+	olivec_fill_line(pixels, WIDTH, HEIGTH, WIDTH/2,	HEIGTH,		WIDTH/2,	0,			0xAA20CC20);
+	olivec_fill_line(pixels, WIDTH, HEIGTH, WIDTH,		HEIGTH/2,	0,			HEIGTH/2,	0xAACC0220);
 	
-	olivec_fill_line(pixels, WIDTH, HEIGTH, 0,			HEIGTH/2,	WIDTH,		0,			0xFF00CCFF);
-	olivec_fill_line(pixels, WIDTH, HEIGTH, 0,			HEIGTH/2,	WIDTH,		HEIGTH,		0xFF00CCFF);
+	olivec_fill_line(pixels, WIDTH, HEIGTH, 0,			HEIGTH/2,	WIDTH,		0,			0xAA00CCFF);
+	olivec_fill_line(pixels, WIDTH, HEIGTH, 0,			HEIGTH/2,	WIDTH,		HEIGTH,		0xAA00CCFF);
 	
 	if (olivec_save_to_ppm_file_path(pixels, WIDTH, HEIGTH, file_path) == -1){
 		std::cerr << "Failed to input data to file path given!" << std::endl;
@@ -94,12 +112,12 @@ int line_sample(){
 	
 	file_path = "samples/checker_lines.ppm";
 	
-	olivec_fill(pixels, WIDTH, HEIGTH, 0xFFFFFFFF);
+	olivec_fill(pixels, WIDTH, HEIGTH, 0xAAFFFFFF);
 
 	for(int y =0;y<ROWS;y++) {
 		for(int x=0;x<COLS;x++) {
-			olivec_fill_line(pixels, WIDTH, HEIGTH, x*CELL_W, y*CELL_H, (x+1)*CELL_W, y*CELL_H, 0xFF000000);
-			olivec_fill_line(pixels, WIDTH, HEIGTH, x*CELL_W, y*CELL_H, x*CELL_W, (y+1)*CELL_H, 0xFF000000);
+			olivec_fill_line(pixels, WIDTH, HEIGTH, x*CELL_W, y*CELL_H, (x+1)*CELL_W, y*CELL_H, 0xAA000000);
+			olivec_fill_line(pixels, WIDTH, HEIGTH, x*CELL_W, y*CELL_H, x*CELL_W, (y+1)*CELL_H, 0xAA000000);
 		}
 	}
 
@@ -126,7 +144,7 @@ int triangles_sample()
 		x1, y1,
 		x2, y2,
 		x3, y3,
-		0xff2ee90e	
+		0xaa2ee90e	
 	);
 
 	x1 = 400, x2 = 700, x3 = 50;
@@ -136,7 +154,7 @@ int triangles_sample()
 		x1, y1,
 		x2, y2,
 		x3, y3,
-		0xffe98a4a	
+		0xaae98a4a	
 	);
 
 	x1 = 110, x2 = 500, x3 = 780;
@@ -146,7 +164,7 @@ int triangles_sample()
 		x1, y1,
 		x2, y2,
 		x3, y3,
-		0xff1783b1	
+		0xaa1783b1	
 	);
 
 
@@ -164,7 +182,7 @@ int triangles_sample()
 				pixels, WIDTH, HEIGTH,
 				x*CELL_W, y*CELL_H,
 				5,
-				0xFFFF0000
+				0xAAFF0000
 			);
 		}
 	}
@@ -177,7 +195,7 @@ int triangles_sample()
 				x*CELL_W, y*CELL_H,
 				(x+1)*CELL_W, y*CELL_H,
 				x*CELL_W, (y+1)*CELL_H,
-				0xFF20BB20
+				0xAA20BB20
 			);
 		}
 	}
